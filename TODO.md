@@ -1,0 +1,2 @@
+- [x] Add updateProfile function to authController.js
+- [x] Update authRoutes.js to add PUT /profile route with authMiddleware

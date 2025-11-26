@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Phone Auth Test</title>
+    <script type="module">
+        // Import Firebase SDK
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+        import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
+
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyCxt0blqUrIq13q1R-79WeCXtG47bkPRjU",
+            authDomain: "relaydormobileotp.firebaseapp.com",
+            projectId: "relaydormobileotp",
+            storageBucket: "relaydormobileotp.firebasestorage.app",
+            messagingSenderId: "691262538946",
+            appId: "1:691262538946:web:e6e6435f1e1a8ec894275b",
+            measurementId: "G-V040W4BMQZ"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Setup reCAPTCHA
+        window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+            size: 'invisible',
+            callback: (response) => {
+                console.log("reCAPTCHA solved");
+            }
+        }, auth);
+
+        window.sendOTP = async function() {
+            const phoneNumber = document.getElementById('phone').value;
+            const appVerifier = window.recaptchaVerifier;
+
+            try {
+                const confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
+                window.confirmationResult = confirmationResult;
+                document.getElementById('otp-section').style.display = 'block';
+                document.getElementById('message').innerText = 'OTP sent to ' + phoneNumber;
+            } catch (error) {
+                console.error('Error sending OTP:', error);
+                document.getElementById('message').innerText = 'Error: ' + error.message;
+            }
+        };
+
+        window.verifyOTP = async function() {
+            const code = document.getElementById('otp').value;
+
+            try {
+                const result = await window.confirmationResult.confirm(code);
+                const user = result.user;
+                const idToken = await user.getIdToken();
+                document.getElementById('message').innerText = 'Verified! ID Token: ' + idToken.substring(0, 50) + '...';
+                console.log('ID Token:', idToken);
+                // Now send this idToken to your backend API
+            } catch (error) {
+                console.error('Error verifying OTP:', error);
+                document.getElementById('message').innerText = 'Invalid OTP';
+            }
+        };
+    </script>
+</head>
+<body>
+    <h1>Firebase Phone Auth Test</h1>
+    <div id="recaptcha-container"></div>
+    <input type="text" id="phone" placeholder="+91xxxxxxxxxx" />
+    <button onclick="sendOTP()">Send OTP</button>
+    <br><br>
+    <div id="otp-section" style="display: none;">
+        <input type="text" id="otp" placeholder="Enter OTP" />
+        <button onclick="verifyOTP()">Verify OTP</button>
+    </div>
+    <p id="message"></p>
+</body>
+</html>
