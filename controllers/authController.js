@@ -1,7 +1,7 @@
 import User from "../models/UserModel.js";
 import { generateOtp } from "../utils/otpGenerator.js";
 import sendEmail from "../utils/sendEmail.js";
-import admin, { verifyFirebaseToken } from "../config/firebase.js";
+import { verifyFirebaseToken } from "../config/firebase.js";
 import path from "path";
 
 import bcrypt from "bcryptjs";

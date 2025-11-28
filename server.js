@@ -13,6 +13,7 @@ import authRoutes from "./routes/authRoutes.js";
 import doctorRoutes from "./routes/doctorRoutes.js";
 import patientRoutes from "./routes/patientRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import chatRoutes from "./routes/chatRoutes.js";
 
 // Load ENV
 dotenv.config();
@@ -40,7 +41,9 @@ app.use((req, res, next) => {
 app.use(cors());
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true }));
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: false, // Temporarily disable CSP for testing
+}));
 app.use(compression());
 app.use(morgan("dev"));
 
@@ -67,9 +70,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/doctor", doctorRoutes);
 app.use("/api/patients", patientRoutes);
-
-
-
+app.use("/api/chat", chatRoutes);
 
 // admin routes can be added here
 app.use("/api/admin", adminRoutes);
@@ -88,3 +89,4 @@ app.use(errorHandler);
 // Start server
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+

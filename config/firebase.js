@@ -16,8 +16,11 @@ const serviceAccount = {
   universe_domain: process.env.FIREBASE_UNIVERSE_DOMAIN,
 };
 
+
+// i use databseurl for only messaging use https://relaydormobileotp-default-rtdb.firebaseio.com/
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://relaydormobileotp-default-rtdb.firebaseio.com/"  
 });
 
 export const verifyFirebaseToken = async (idToken) => {
