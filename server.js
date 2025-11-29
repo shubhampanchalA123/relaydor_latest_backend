@@ -14,6 +14,7 @@ import doctorRoutes from "./routes/doctorRoutes.js";
 import patientRoutes from "./routes/patientRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import chatRoutes from "./routes/chatRoutes.js";
+import communityRoutes from "./routes/communityRoutes.js";
 
 // Load ENV
 dotenv.config();
@@ -71,6 +72,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/doctor", doctorRoutes);
 app.use("/api/patients", patientRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/community", communityRoutes);
 
 // admin routes can be added here
 app.use("/api/admin", adminRoutes);
